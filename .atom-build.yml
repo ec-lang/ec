@@ -1,0 +1,7 @@
+cmd: "cmake --build build --config Debug"
+errorMatch:
+  # MSBuild error match
+  "  (?<file>[^\\s]+)\\((?<line>\\d+)\\): (?<message>error.+) "
+warningMatch:
+  # MSBuild warning match
+  "  (?<file>[^\\s]+)\\((?<line>\\d+)\\): (?<message>warning.+) "
