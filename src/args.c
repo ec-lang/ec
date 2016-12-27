@@ -1,5 +1,7 @@
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "args.h"
 
@@ -12,15 +14,12 @@ typedef struct Args {
 } Args;
 
 static char HELP_MESSAGE[] =
-"ec compiler\n"
-"\n"
 "Usage: ecc [options] <file>...\n"
 "\n"
 "Options:\n"
 "  -h --help     Show this screen.\n"
 "  --version     Show version.\n"
-"  -v            Show commands to run and use verbose output\n"
-"\n";
+"  -v            Show commands to run and use verbose output";
 
 static void initArgs(int argc, char *argv[], Args *args)
 {
@@ -46,12 +45,29 @@ static char getChar(Args *args)
     }
 }
 
-static void ungetChar(Args *args)
-{
-}
-
 static void parseLong(Args *args, Option *option)
 {
+    char buf[4096];
+    char *ptr = buf;
+    char *end = buf + sizeof(buf);
+
+    for (;;) {
+        char ch = getChar(args);
+        if (ch == ' ' || ch == EOF) {
+            break;
+        } else {
+            assert(ptr < end);
+            *ptr++ = ch;
+        }
+    }
+
+    *ptr = '\0';
+
+    if (strcmp(buf, "version") == 0) {
+        option->isVersion = true;
+    } else {
+        option->isError = true;
+    }
 }
 
 static void parseShort(Args *args, Option *option, char next)

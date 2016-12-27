@@ -11,7 +11,9 @@ int main(int argc, char *argv[])
     parseArgs(argc, argv, &option);
 
     if (option.isError || option.isHelp) {
-        printf("%s", option.help);
+        printf("%s\n", option.help);
+    } else if (option.isVersion) {
+        printf("v%s\n", ECC_VERSION);
     }
 
     return 0;
